@@ -5,6 +5,8 @@ import java.io.FileReader;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +19,8 @@ import com.fynd.batchprocessing.utility.RestUtility;
 @RestController
 public class LoadTestController {
 
-	 
+	 private static final Logger LOGGER=LoggerFactory.getLogger(LoadTestController.class); 
+	
     @Value(value = "${defaultLoadTestFilePath}")
 	private String defaultLoadTestFilePath;
     
@@ -31,7 +34,7 @@ public class LoadTestController {
 	
 	 @GetMapping("/loadTest")
 	    public LoadTestResponse sendData(@RequestParam String filepath)
-	 {
+	 	{
 		 int countUserCreatedTopic=0;
 		 int countUserModifiedTopic=0;
 		 int countUserInvoiceGeneratedTopic=0;
@@ -63,10 +66,7 @@ public class LoadTestController {
 	                	countUserInvoiceGeneratedTopic++;
 	                }
 	                
-	                long startTime = System.currentTimeMillis();
 	                boolean result = restUtility.doPost(jsonObject);
-	                
-	                
 	                //Thread.sleep(1000);
 	                 
 	            }
@@ -79,9 +79,10 @@ public class LoadTestController {
 	            return response;
 	    	}
 	    	catch (Exception e) {
-				
+				//LOGGER.info("Exception "+e.getMessage());
+	    		e.printStackTrace();
 			}
-			return null;
+			return new LoadTestResponse();
 	    	
 
 	    }
