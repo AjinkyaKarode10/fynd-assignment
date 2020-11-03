@@ -25,9 +25,22 @@ public class BatchConsumer {
 
 	private static int COUNTER = 0;
 
+	@Value(value = "${directoryPattern}")
+	private String directoryPattern;
+	
 	@Value(value = "${filenamePattern}")
 	private String filenamePattern;
+	
+	@Value(value = "${maxFileSize}")
+	private int maxFileSize;
+	
+	@Value(value = "${maxWaitTime}")
+	private long maxWaitTime;
+	
+	@Value(value = "${datePattern}")
+	private String datePattern;
 
+	
 	//@KafkaListener(topics = {"userCreated" , "userModified"}, groupId = "group_id")
 	@KafkaListener(topics = "#{'${spring.kafka.topicName}'.split(',')}",groupId = "group_id")
 	public void consumeMessage(CustomerPayload payload) {
@@ -38,34 +51,40 @@ public class BatchConsumer {
 			Date endDate = new Date();
 			long difference = endDate.getTime() - startDate.getTime();
 			
-			String pattern = "yyyy-MM-dd";
+			String pattern = datePattern;
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 			String date = simpleDateFormat.format(new Date());
 			
-			File file = new File(filenamePattern + date + "batch-"+COUNTER +".txt");
-			file.createNewFile();
-
-			long length = file.length() / 1024;
-			if ((difference / (60 * 1000) % 60) > 5 
-					|| length > 10) 
+			File directory = new File(directoryPattern);
+	        if (! directory.exists()){
+	            directory.mkdirs();
+	        }
+	        
+	        File file = new File(directoryPattern+filenamePattern + date +"-"+COUNTER +".txt");
+			long size = file.length() / (1024*1024);
+			
+			if ((difference / (60 * 1000) % 60) > maxWaitTime 
+								|| size >= maxFileSize) 
 			{
-				COUNTER = COUNTER+1;
-				File newFile = new File(filenamePattern + date + "batch-" + COUNTER + ".txt" );
-				file.createNewFile();
-				LOGGER.info("New File created");
-				appendDataToFile(newFile.getPath(), payload);
-				startDate = new Date();
+					LOGGER.info("difference "+difference+" size "+size);
+					COUNTER = COUNTER+1;
+					File newFile = new File(directoryPattern+filenamePattern + date + "-batch-" + COUNTER + ".txt" );
+					//file.createNewFile();
+					LOGGER.info("New File created");
+					appendDataToFile(newFile.getPath(), payload);
+					startDate = new Date();
+					
 			} 
-			else {
+			else 
+			{
 				LOGGER.info("Same File");
 				appendDataToFile(file.getPath(), payload);
-
 			}
-
-			System.out.println("userCreated " + payload);
-		} catch (IOException e) {
+			LOGGER.info(payload.toString());
+		} 
+		catch (Exception e) {
 			
-			e.printStackTrace();
+			LOGGER.info(e.getMessage());
 		}
 	}
 
@@ -77,7 +96,7 @@ public class BatchConsumer {
 			out.newLine();
 			out.close();
 		} catch (IOException e) {
-			System.out.println("exception occoured" + e);
+			LOGGER.info("Exception occurred "+e.getMessage());
 		}
 	}
 

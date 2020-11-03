@@ -63,9 +63,11 @@ public class LoadTestController {
 	                	countUserInvoiceGeneratedTopic++;
 	                }
 	                
+	                long startTime = System.currentTimeMillis();
 	                boolean result = restUtility.doPost(jsonObject);
 	                
-	                Thread.sleep(1000);
+	                
+	                //Thread.sleep(1000);
 	                 
 	            }
 	            
