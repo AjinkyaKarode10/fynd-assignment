@@ -32,7 +32,8 @@ This project lets you push JSON content on Kafka and consume it , also saves con
   inside json Array.
   `[{},{}]`
 * JSON Payload example
-  ```{
+  ```
+  {
     "eventType":"userCreated",
     "customerName":"Ajinkya",
     "customerAddress":"Address"
