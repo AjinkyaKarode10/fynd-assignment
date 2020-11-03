@@ -1,13 +1,31 @@
-version: '2'
+version: '3'
 services:
   zookeeper:
     image: wurstmeister/zookeeper
+    container_name: zookeeper
     ports:
     - "2181:2181"
   kafka:
     image: wurstmeister/kafka
+    container_name: kafka
     ports:
     - "9092:9092"
+    hostname: kafka
     environment:
-      KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
+      KAFKA_ADVERTISED_HOST_NAME: kafka
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+     # KAFKA_ADVERTISED_LISTENERS: INSIDE://:9092,OUTSIDE://ec2-3-17-72-178.us-east-2.compute.amazonaws.com:9094
+     # KAFKA_LISTENERS: INSIDE://:9092,OUTSIDE://:9094
+     # KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+     # KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+      KAFKA_ADVERTISED_PORT: 9092
+    links:
+      - zookeeper
+#  fynd-app:
+#    image: fynd-app
+#    container_name: fynd-app
+#    ports:
+#      - "8081:8081"
+   # depends_on:
+    #  - zookeeper
+     # - kafka
