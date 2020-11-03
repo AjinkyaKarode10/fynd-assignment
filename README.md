@@ -1,49 +1,51 @@
 # Project Name
-> Here goes your awesome project description!
+> Spring Boot Apache kafka 
 
 ## Table of contents
 * [General info](#general-info)
-* [Screenshots](#screenshots)
 * [Technologies](#technologies)
 * [Setup](#setup)
-* [Features](#features)
+* [Todo](#todo)
 * [Status](#status)
-* [Inspiration](#inspiration)
 * [Contact](#contact)
 
 ## General info
-Add more general information about project. What the purpose of the project is? Motivation?
-
-## Screenshots
-![Example screenshot](./img/screenshot.png)
+This project lets you push JSON content on Kafka and consume it , also saves content in file .
 
 ## Technologies
-* Tech 1 - version 1.0
-* Tech 2 - version 2.0
-* Tech 3 - version 3.0
+* Java 8
+* Apache Kafka 
+* Zookeeper 
+* Docker images for zookeeper & kafka
 
 ## Setup
-Describe how to install / setup your local environement / add link to demo version.
+###### Docker
+* Step 1) run command `docker-compose up` in docker(directory where docker-compose.yml is present)
+* Step 2) `mvn clean install` and java -jar 'jar_name'
 
-## Code Examples
-Show examples of usage:
-`put-your-code-here`
+###### Local Environment
+* Step 1) Install zookeeper and kafka locally.
+* Step 2) Run project as 'Run as Java Application' in Eclipse.
 
-## Features
-List of features ready and TODOs for future development
-* Awesome feature 1
-* Awesome feature 2
-* Awesome feature 3
-
-To-do list:
-* Wow improvement to be done 1
-* Wow improvement to be done 2
+## Todo:
+* Added loadTest.json file for load testing . It is a json file so include your custom JSON payload 
+  inside json Array.
+  `[{},{}]`
+* JSON Payload example
+  ```{
+    "eventType":"userCreated",
+    "customerName":"Ajinkya",
+    "customerAddress":"Address"
+  }```
+* Topic Names are mentioned in application.properties file       
+  `Note :- By default auto creation of topic is enabled `.        
+  But if you keep different eventType value in JSON payload and that eventType is not present in
+  application.properties ,Custom Exception is thrown.          
+* I have kept topic names , path for loading load test file , filename pattern , directory pattern
+  , maxFilesize , maxWaitTime as configurable in application.properties.       
 
 ## Status
-Project is: _in progress_, _finished_, _no longer continue_ and why?
-
-## Inspiration
-Add here credits. Project inspired by..., based on...
+Project is:  _in progress_
 
 ## Contact
-Created by [@flynerdpl](https://www.flynerd.pl/) - feel free to contact me!
+Created by Ajinkya Karode - feel free to contact me!(akarode199@gmail.com)
