@@ -1,0 +1,14 @@
+docker build --tag fynd-app_two .
+
+docker-compose up
+
+mvn clean install -DskipAllTests
+
+ curl --header "Content-Type: application/json"   --request POST   
+ --data '{"eventType":"userCreated","customerName":"xyz"}'   http://localhost:8081/publish
+
+
+ docker build -t ajinkyakarode10/my-assignments .
+ 
+ docker push ajinkyakarode10/my-assignments
+ 

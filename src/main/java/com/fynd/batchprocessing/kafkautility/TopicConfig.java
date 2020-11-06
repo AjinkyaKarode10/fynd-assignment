@@ -15,6 +15,10 @@ public class TopicConfig {
 
 	@Value(value = "${userModified.topic.name}")
 	private String userModified;
+	
+	@Value(value = "${userInvoiceGenerated.topic.name}")
+	private String userInvoiceGenerated;
+
 
 	@Bean
 	public NewTopic userCreated() {
